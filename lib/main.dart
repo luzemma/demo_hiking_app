@@ -24,6 +24,7 @@ class _MyAppState extends State<MyApp> {
         ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: isDarkTheme ? darkTheme : lightTheme,
       darkTheme: darkTheme,
       home: MyHomePage(
