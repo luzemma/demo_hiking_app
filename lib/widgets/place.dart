@@ -1,23 +1,35 @@
+import 'dart:math';
+
 import 'package:demo_lakes/widgets/carousel.dart';
 import 'package:demo_lakes/widgets/score.dart';
 import 'package:demo_lakes/widgets/text_icon_button.dart';
 import 'package:flutter/material.dart';
 
-class Place extends StatelessWidget {
+class Place extends StatefulWidget {
   final String title;
   final String subtitle;
-  final String imageUrl;
   final String description;
   final int score;
-  final List<String> thumbsUrl;
+  final List<String> imagesUrl;
   const Place(
       {required this.title,
       required this.subtitle,
       required this.description,
-      required this.imageUrl,
       required this.score,
-      required this.thumbsUrl,
+      required this.imagesUrl,
       super.key});
+
+  @override
+  State<Place> createState() => _PlaceState();
+}
+
+class _PlaceState extends State<Place> {
+  int selectedIndex = 0;
+  @override
+  void initState() {
+    selectedIndex = Random().nextInt(widget.imagesUrl.length);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +48,22 @@ class Place extends StatelessWidget {
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: Image(
-                  image: NetworkImage(imageUrl),
+                  image: NetworkImage(widget.imagesUrl[selectedIndex]),
                 ),
               ),
             ),
             Positioned(
               bottom: 20,
-              left: MediaQuery.of(context).size.width * 0.2,
-              width: MediaQuery.of(context).size.width * 0.6,
+              left: MediaQuery.of(context).size.width * 0.15,
+              width: MediaQuery.of(context).size.width * 0.7,
               height: 50,
               child: Carousel(
-                images: thumbsUrl,
+                images: widget.imagesUrl,
+                callback: (value) {
+                  setState(() {
+                    selectedIndex = value;
+                  });
+                },
               ),
             ),
           ],
@@ -66,21 +83,21 @@ class Place extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      widget.title,
                       style: textTheme.titleLarge,
                     ),
                     const SizedBox(
                       height: 8,
                     ),
                     Text(
-                      subtitle,
+                      widget.subtitle,
                       style: textTheme.bodyLarge,
                     ),
                   ],
                 ),
               ),
               Score(
-                score: score,
+                score: widget.score,
               )
             ],
           ),
@@ -104,7 +121,7 @@ class Place extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Text(
-            description,
+            widget.description,
             style: textTheme.bodyMedium,
           ),
         )

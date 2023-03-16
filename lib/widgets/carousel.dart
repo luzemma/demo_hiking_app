@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class Carousel extends StatelessWidget {
   final List<String> images;
-  const Carousel({required this.images, super.key});
+  final Function callback;
+
+  const Carousel({required this.images, required this.callback, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +25,17 @@ class Carousel extends StatelessWidget {
   }
 
   List<Widget> _getImagesWidgets() {
-    return images
-        .map(
-          (item) => Image(
-            image: NetworkImage(item),
+    List<Widget> result = [];
+    for (var i = 0; i < images.length; i++) {
+      result.add(
+        GestureDetector(
+          onTap: () => callback(i),
+          child: Image(
+            image: NetworkImage(images[i]),
           ),
-        )
-        .toList();
+        ),
+      );
+    }
+    return result;
   }
 }
